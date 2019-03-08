@@ -76,7 +76,7 @@ def HandlePostStoryRequest(request):
     # Check if user is logged in
     if request.user.is_authenticated:
         # Decode json data
-        requestData = json.loads(request.data)
+        requestData = json.loads(request.body)
         # Create the story object and save to database
         author = Author.objects.get(user=request.user)
         headline = requestData['headline']
@@ -130,12 +130,12 @@ def HandleGetStoriesRequest(request):
         jsonList = []
         # Iterate through the story list as a dict
         for record in stories.values():
-            # We need to get the author model as a dict first
-            author = record['author']
-            authorDict = author.values()
+            # We need to get the author name first
+            author_id = record['author_id']
+            authorName = Author.objects.get(id=author_id).name
             # Withdraw the information and add to the JSON list
             item = {'key':record['id'], 'headline':record['headline'], 'story_cat':record['category'],
-            'story_region':record['region'], 'author':authorDict['name'], 'story_date':record['date'],
+            'story_region':record['region'], 'author':authorName, 'story_date':record['date'],
             'story_details':record['details']}
             jsonList.append(item)
         payload = {'stories':jsonList}
@@ -170,7 +170,7 @@ def HandleDeleteStoryRequest(request):
     # Check if user is logged in
     if request.user.is_authenticated:
         # Decode json data
-        requestData = json.loads(request.data)
+        requestData = json.loads(request.body)
         # Delete the story object
         story_id = requestData['story_key']
         s1 = Story.objects.get(id=story_id)
