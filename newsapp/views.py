@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -139,7 +139,7 @@ def HandleGetStoriesRequest(request):
             'details':record['details']}
             jsonList.append(item)
         payload = {'stories':jsonList}
-        http_response = HttpResponse(json.dumps(payload))
+        http_response = JsonResponse(payload) #json.dumps(payload)
         http_response.status_code = 200
         http_response.reason_phrase = 'OK'
         http_response['Content-Type'] = 'application/json'
