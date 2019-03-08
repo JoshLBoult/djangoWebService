@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from newsapp.models import Author, Story
+import json
 
 # Login handler
 @csrf_exempt
@@ -74,12 +75,14 @@ def HandlePostStoryRequest(request):
 
     # Check if user is logged in
     if request.user.is_authenticated:
+        # Decode json data
+        requestData = json.loads(request.data)
         # Create the story object and save to database
         author = Author.objects.get(user=request.user)
-        headline = request.POST['headline']
-        category = request.POST['category']
-        region = request.POST['region']
-        details = request.POST['details']
+        headline = requestData['headline']
+        category = requestData['category']
+        region = requestData['region']
+        details = requestData['details']
         s1 = Story(author=author, headline=headline, category=category, region=region,
         details=details)
         s1.save()
@@ -106,9 +109,10 @@ def HandleGetStoriesRequest(request):
         return http_bad_response
 
     # Retrieve information from the request
-    category = request.GET['story_cat']
-    region = request.GET['story_region']
-    date = request.GET['story_date']
+    requestData = json.loads(request.data)
+    category = requestData['story_cat']
+    region = requestData['story_region']
+    date = requestData['story_date']
 
     # Get the total story list to begin with
     stories = Story.objects.all()
@@ -165,8 +169,10 @@ def HandleDeleteStoryRequest(request):
 
     # Check if user is logged in
     if request.user.is_authenticated:
+        # Decode json data
+        requestData = json.loads(request.data)
         # Delete the story object
-        story_id = request.POST['story_key']
+        story_id = requestData['story_key']
         s1 = Story.objects.get(id=story_id)
         s1.delete()
         http_response.status_code = 201
