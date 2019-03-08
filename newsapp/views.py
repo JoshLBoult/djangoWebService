@@ -135,8 +135,8 @@ def HandleGetStoriesRequest(request):
             authorDict = author.values()
             # Withdraw the information and add to the JSON list
             item = {'key':record['id'], 'headline':record['headline'], 'story_cat':record['category'],
-            'story_region':record['region'], 'author':authorDict['name'], 'date':record['date'],
-            'details':record['details']}
+            'story_region':record['region'], 'author':authorDict['name'], 'story_date':record['date'],
+            'story_details':record['details']}
             jsonList.append(item)
         payload = {'stories':jsonList}
         http_response = JsonResponse(payload, safe=False) #json.dumps(payload)
