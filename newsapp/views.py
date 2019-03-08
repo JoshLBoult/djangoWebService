@@ -139,7 +139,7 @@ def HandleGetStoriesRequest(request):
             'details':record['details']}
             jsonList.append(item)
         payload = {'stories':jsonList}
-        http_response = JsonResponse(payload) #json.dumps(payload)
+        http_response = JsonResponse(json.dumps(payload)) #json.dumps(payload)
         http_response.status_code = 200
         http_response.reason_phrase = 'OK'
         http_response['Content-Type'] = 'application/json'
