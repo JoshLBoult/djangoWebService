@@ -109,7 +109,7 @@ def HandleGetStoriesRequest(request):
         return http_bad_response
 
     # Retrieve information from the request
-    requestData = json.loads(request.data)
+    requestData = json.loads(request.body)
     category = requestData['story_cat']
     region = requestData['story_region']
     date = requestData['story_date']
@@ -139,7 +139,7 @@ def HandleGetStoriesRequest(request):
             'story_details':record['details']}
             jsonList.append(item)
         payload = {'stories':jsonList}
-        http_response = JsonResponse(payload, safe=False) #json.dumps(payload)
+        http_response = JsonResponse(payload) #json.dumps(payload)
         http_response.status_code = 200
         http_response.reason_phrase = 'OK'
         http_response['Content-Type'] = 'application/json'
